@@ -1,0 +1,79 @@
+.card {
+    border: 1px solid #e5e7eb;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.2s, transform 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.imagePlaceholder {
+    width: 100%;
+    height: 12rem;
+    background-color: #f3f4f6;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    overflow: hidden;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.productName {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.brand {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.price {
+    color: #16a34a;
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin: 0.5rem 0;
+}
+
+.stock {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+    /* Empurra o botão pro final */
+}
+
+.button {
+    width: 100%;
+    background-color: #22c55e;
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button:hover {
+    background-color: #16a34a;
+}

@@ -1,0 +1,21 @@
+.section {
+    padding: 2rem 0;
+}
+
+.title {
+    font-size: 1.875rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #111827;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.status {
+    color: #4b5563;
+    font-style: italic;
+}

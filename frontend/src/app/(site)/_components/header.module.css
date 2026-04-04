@@ -1,0 +1,56 @@
+.header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    /* Faz o header acompanhar a tela quando rolar para baixo */
+    top: 0;
+    z-index: 10;
+}
+
+.logoArea {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    /* Quando formos colocar a sua logo, ela vai entrar perfeitamente aqui */
+}
+
+.nav {
+    display: flex;
+    gap: 2rem;
+    /* Espaço entre os links */
+}
+
+.navLink {
+    color: #4b5563;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.navLink:hover {
+    color: #22c55e;
+    /* Verde padrão da loja */
+}
+
+.authButtons {
+    display: flex;
+    gap: 1rem;
+}
+
+.loginBtn {
+    background: none;
+    border: none;
+    color: #111827;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.loginBtn:hover {
+    color: #22c55e;
+}
