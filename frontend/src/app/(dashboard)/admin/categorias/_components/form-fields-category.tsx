@@ -28,14 +28,28 @@ export default function FormFieldsCategory({
   error,
 }: FormFieldsCategoryProps) {
   const { pending } = useFormStatus()
+
   return (
     <>
       <FormFieldsGroup>
         {category && (
           <Input defaultValue={category.id} type="text" name="id" hidden />
         )}
-        {/* inserir campos do formulário */}
+        <FormField>
+          <Label htmlFor="name">Nome da Categoria</Label>
+          <Input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="Ex: Tênis de Corrida"
+            defaultValue={category?.name}
+            readOnly={readOnly}
+            required
+          />
+        </FormField>
+
       </FormFieldsGroup>
+
       <DialogFooter className={cn({ hidden: readOnly })}>
         <Button type="submit" pending={pending}>
           Salvar

@@ -1,4 +1,4 @@
 export type categoryType = {
-    id: number;
+    id: string;
     name: string;
 }

@@ -14,7 +14,7 @@ import {
 import { useToast } from '@/components/use-toast'
 import { useState } from 'react'
 
-interface DialogCreateCategoryProps {
+interface DialogDeleteCategoryProps {
   id: string
   children: React.ReactNode
 }
@@ -22,7 +22,7 @@ interface DialogCreateCategoryProps {
 export function DialogCategoryDelete({
   id,
   children,
-}: DialogCreateCategoryProps) {
+}: DialogDeleteCategoryProps) {
   const [open, setOpen] = useState<boolean>()
   const { toast } = useToast()
 
