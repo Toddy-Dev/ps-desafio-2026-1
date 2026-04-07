@@ -30,10 +30,12 @@ export function DialogInformationSportsItem({
 
   useEffect(() => {
     const requestData = async () => {
-      const { response } = null
+      if (!open) return;
 
-      if (response) {
-        setSportsItem(response)
+      const { response, error } = await api('GET', `/articles/${id}`)
+
+      if (response && !error) {
+        setSportsItem(response as sportsItemType)
       } else {
         setSportsItem(null)
         toast({

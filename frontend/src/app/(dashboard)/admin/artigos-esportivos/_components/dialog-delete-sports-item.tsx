@@ -14,12 +14,13 @@ import {
 import { useToast } from '@/components/use-toast'
 import { useState } from 'react'
 
-interface DialogCreateSportsItemProps {
+
+interface DialogDeleteSportsItemProps {
   id: string
   children: React.ReactNode
 }
 
-export function DialogSportsItemDelete({ id, children }: DialogCreateSportsItemProps) {
+export function DialogSportsItemDelete({ id, children }: DialogDeleteSportsItemProps) {
   const [open, setOpen] = useState<boolean>()
   const { toast } = useToast()
 
@@ -37,6 +38,9 @@ export function DialogSportsItemDelete({ id, children }: DialogCreateSportsItemP
     }
 
     setOpen(false)
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
   }
 
   return (

@@ -9,19 +9,22 @@ import {
   DialogDescription,
 } from '@/components/dialog'
 import FormFieldsSportsItem from './form-fields-sports-item'
-import { updateSportsItem } from '@/actions/sportsItem'
-import { filterFormData } from '@/services/filter-form-data'
+import { sportsItemType } from '@/types/sportsItem'
+import { api, ResponseErrorType } from '@/services/api'
 import { useEffect, useState } from 'react'
 import { useToast } from '@/components/use-toast'
-import { sportsItemType } from '@/types/sportsItem'
-import { ResponseErrorType, api } from '@/services/api'
+import { updateSportsItem } from '@/actions/sportsItem'
+import { filterFormData } from '@/services/filter-form-data'
 
 interface DialogUpdateSportsItemProps {
   id: string
   children: React.ReactNode
 }
 
-export function DialogUpdateSportsItem({ id, children }: DialogUpdateSportsItemProps) {
+export function DialogUpdateSportsItem({
+  id,
+  children,
+}: DialogUpdateSportsItemProps) {
   const [sportsItem, setSportsItem] = useState<sportsItemType | null>(null)
   const [open, setOpen] = useState<boolean>()
   const [error, setError] = useState<ResponseErrorType | null>(null)
@@ -29,14 +32,18 @@ export function DialogUpdateSportsItem({ id, children }: DialogUpdateSportsItemP
 
   useEffect(() => {
     const requestData = async () => {
-      const { response } = await api<sportsItemType>('GET', `/sports-items/${id}`)
+      if (!open) {
+        setError(null)
+        return
+      }
+      const { response, error } = await api('GET', `/articles/${id}`)
 
-      if (response) {
-        setSportsItem(response)
+      if (response && !error) {
+        setSportsItem(response as sportsItemType)
       } else {
         setSportsItem(null)
         toast({
-          title: 'Artigo esportivo  não encontrado!',
+          title: 'Artigo esportivo não encontrado!',
         })
         setOpen(false)
       }
@@ -52,19 +59,21 @@ export function DialogUpdateSportsItem({ id, children }: DialogUpdateSportsItemP
 
   const submit = async (form: FormData) => {
     const newForm = await filterFormData(form)
-
-    const { error } = null 
+    const { error } = await JSON.parse(await updateSportsItem(newForm))
 
     if (error) {
       setError(error)
       toast({
-        title: 'Não foi possível editar o artigo esportivo!',
+        title: 'Não foi possível atualizar o artigo esportivo!',
       })
     } else {
       toast({
-        title: 'Artigo esportivo editado com sucesso!',
+        title: 'Artigo esportivo atualizado com sucesso!',
       })
       setOpen(false)
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     }
   }
 
@@ -75,12 +84,12 @@ export function DialogUpdateSportsItem({ id, children }: DialogUpdateSportsItemP
         <DialogHeader>
           <DialogTitle>Editar artigo esportivo</DialogTitle>
           <DialogDescription>
-            Atualize as informações do artigo esportivo abaixo e clique em
-            &quot;Salvar&quot; para aplicar as alterações.
+            Edite as informações do artigo esportivo abaixo e clique em
+            &rdquo;Salvar&rdquo; para atualizar o sistema.
           </DialogDescription>
         </DialogHeader>
         <form action={submit}>
-          <FormFieldsSportsItem error={error} sportsItem={sportsItem} />
+          <FormFieldsSportsItem sportsItem={sportsItem} error={error} />
         </form>
       </DialogContent>
     </Dialog>

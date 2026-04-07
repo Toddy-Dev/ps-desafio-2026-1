@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { DashboardContainer } from '@/components/dashboard/dashboard-items'
 import {
   TabbleCellImage,
@@ -18,18 +21,41 @@ import { DialogSportsItemDelete } from './dialog-delete-sports-item'
 import { DialogInformationSportsItem } from './dialog-information-sports-item'
 import { DialogCreateSportsItem } from './dialog-create-sports-item'
 
-export default async function ListSportsItems() {
-  const { response } = null // requisicao para api
+export default function ListSportsItems() {
+  const [sportsItems, setSportsItems] = useState<sportsItemType[] | null>(null);
+  const [categories, setCategories] = useState<any[]>([]);
 
-  if (!response) {
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const resCategories = await api('GET', '/category')
+        if (resCategories.response) {
+          setCategories(resCategories.response as any[])
+        }
+        const { response, error } = await api('GET', '/articles')
+
+        if (response) {
+          setSportsItems(response as sportsItemType[])
+        } else {
+          console.error("Erro na API:", error?.message)
+          setSportsItems([])
+        }
+      } catch (err) {
+        console.error("Erro inesperado:", err)
+        setSportsItems([])
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  if (sportsItems === null) {
     return (
-      <DashboardContainer className="text-destructive">
-        Não foi possível obter os imóveis.
+      <DashboardContainer>
+        Carregando artigos esportivos...
       </DashboardContainer>
     )
   }
-
-  const sportsItems: sportsItemType[] = response
 
   return (
     <>
@@ -46,24 +72,23 @@ export default async function ListSportsItems() {
           <TableHeader>
             <TableRow>
               <TableHead>Imagem</TableHead>
-              <TableHead>Titulo</TableHead>
+              <TableHead>Nome</TableHead>
               <TableHead>Categoria</TableHead>
               <TableHead>Quantidade</TableHead>
               <TableHead className="text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sportsItems?.map((sportsItem: sportsItemType) => (
+            {sportsItems.map((sportsItem: sportsItemType) => (
               <TableRow key={sportsItem.id}>
                 <TableCell>
                   <TabbleCellImage src={sportsItem.image} />
                 </TableCell>
-                
-                <TableCell>{sportsItem.title}</TableCell>
+                <TableCell>{sportsItem.name}</TableCell>
+                <TableCell>
+                  {sportsItem.category?.name || categories.find(c => c.id === sportsItem.category_id)?.name || 'Sem Categoria'}
+                </TableCell>
                 <TableCell>{sportsItem.amount}</TableCell>
-                <TableCell>{sportsItem.category.name}</TableCell>
-                {/* demais propriedades de sportsItemType */}
-                
                 <TableCell className="flex justify-end gap-2">
                   <DialogInformationSportsItem id={sportsItem.id}>
                     <Button variant="default-inverse" size="icon">

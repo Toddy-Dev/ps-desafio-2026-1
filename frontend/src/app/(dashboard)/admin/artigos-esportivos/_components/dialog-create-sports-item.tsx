@@ -45,6 +45,9 @@ export function DialogCreateSportsItem({ children }: DialogCreateSportsItemProps
         title: 'Artigo esportivo criado com sucesso!',
       })
       setOpen(false)
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     }
   }
 
