@@ -41,7 +41,7 @@ export default function FormFieldsCategory({
             id="name"
             name="name"
             type="text"
-            placeholder="Ex: Tênis de Corrida"
+            placeholder="Insira o nome da Categoria"
             defaultValue={category?.name}
             readOnly={readOnly}
             required
@@ -50,11 +50,13 @@ export default function FormFieldsCategory({
 
       </FormFieldsGroup>
 
-      <DialogFooter className={cn({ hidden: readOnly })}>
-        <Button type="submit" pending={pending}>
-          Salvar
-        </Button>
-      </DialogFooter>
+      {!readOnly && (
+        <DialogFooter>
+          <Button type="submit" pending={pending}>
+            Salvar
+          </Button>
+        </DialogFooter>
+      )}
     </>
   )
 }

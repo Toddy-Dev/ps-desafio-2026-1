@@ -21,10 +21,7 @@ interface DialogUpdateSportsItemProps {
   children: React.ReactNode
 }
 
-export function DialogUpdateSportsItem({
-  id,
-  children,
-}: DialogUpdateSportsItemProps) {
+export function DialogUpdateSportsItem({ id, children, }: DialogUpdateSportsItemProps) {
   const [sportsItem, setSportsItem] = useState<sportsItemType | null>(null)
   const [open, setOpen] = useState<boolean>()
   const [error, setError] = useState<ResponseErrorType | null>(null)
@@ -32,14 +29,13 @@ export function DialogUpdateSportsItem({
 
   useEffect(() => {
     const requestData = async () => {
-      if (!open) {
-        setError(null)
-        return
-      }
-      const { response, error } = await api('GET', `/articles/${id}`)
+      if (!open) return
+      setSportsItem(null)
 
-      if (response && !error) {
-        setSportsItem(response as sportsItemType)
+      const { response } = await api<sportsItemType>('GET', `/articles/${id}`)
+
+      if (response) {
+        setSportsItem(response)
       } else {
         setSportsItem(null)
         toast({
@@ -71,9 +67,6 @@ export function DialogUpdateSportsItem({
         title: 'Artigo esportivo atualizado com sucesso!',
       })
       setOpen(false)
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
     }
   }
 

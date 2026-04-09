@@ -38,9 +38,6 @@ export function DialogSportsItemDelete({ id, children }: DialogDeleteSportsItemP
     }
 
     setOpen(false)
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000);
   }
 
   return (

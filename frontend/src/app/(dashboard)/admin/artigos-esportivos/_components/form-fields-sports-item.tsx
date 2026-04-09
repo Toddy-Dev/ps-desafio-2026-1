@@ -16,6 +16,7 @@ import { sportsItemType } from '@/types/sportsItem'
 import { categoryType } from '@/types/category'
 import { useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select'
 
 interface FormFieldsSportsItemProps {
   sportsItem?: sportsItemType | null
@@ -29,18 +30,24 @@ export default function FormFieldsSportsItem({
   error,
 }: FormFieldsSportsItemProps) {
   const { pending } = useFormStatus()
-  const [updateImage, setUpdateImage] = useState<string | undefined>()
-
   const [categories, setCategories] = useState<categoryType[]>([])
+  const [updateImage, setUpdateImage] = useState<string | undefined>(sportsItem?.image || undefined)
+  const [selectedCategory, setSelectedCategory] = useState<categoryType | null>(
+    sportsItem?.category ?? null
+  )
 
   useEffect(() => {
-    async function fetchCategories() {
-      const { response } = await api('GET', '/category')
+    async function getCategories() {
+      const { response, error } = await api('GET', '/category')
+
       if (response) {
         setCategories(response as categoryType[])
+      } else {
+        console.error(error?.message)
       }
     }
-    fetchCategories()
+
+    getCategories()
   }, [])
 
   return (
@@ -49,97 +56,134 @@ export default function FormFieldsSportsItem({
         {sportsItem && <Input defaultValue={sportsItem.id} type="text" name="id" hidden />}
 
         <FormField>
-          <Label htmlFor="image">Imagem do Artigo</Label>
+          <Label htmlFor="image" required={!sportsItem}>
+            Imagem
+          </Label>
           <Input
-            id="image"
             name="image"
+            id="image"
             type="file"
             accept="image/*"
-            disabled={readOnly}
-            className="cursor-pointer"
+            disabled={pending}
+            hidden={readOnly}
+            className="w-full cursor-pointer text-transparent file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
+            onChange={(e) => handleImageChange(e, setUpdateImage)}
+          />
+          <ImageForm
+            className="aspect-square size-40"
+            src={updateImage || sportsItem?.image}
           />
         </FormField>
 
         <FormField>
-          <Label htmlFor="name">Nome do Artigo</Label>
+          <Label htmlFor="name" required={!sportsItem}>
+            Nome
+          </Label>
           <Input
-            id="name"
             name="name"
+            id="name"
+            placeholder="Insira o nome do artigo esportivo"
             defaultValue={sportsItem?.name}
             readOnly={readOnly}
-            required
-            placeholder="Ex: Tênis Nike Air Max"
+            disabled={pending}
           />
         </FormField>
 
         <FormField>
-          <Label htmlFor="brand">Marca</Label>
+          <Label htmlFor="brand" required={!sportsItem}>
+            Marca
+          </Label>
           <Input
-            id="brand"
             name="brand"
+            id="brand"
+            placeholder="Insira a marca do artigo esportivo"
             defaultValue={sportsItem?.brand}
             readOnly={readOnly}
-            required
-            placeholder="Ex: Nike, Adidas, Puma..."
+            disabled={pending}
           />
         </FormField>
 
         <FormField>
-          <Label htmlFor="category_id">Categoria</Label>
-          <select
-            id="category_id"
-            name="category_id"
-            defaultValue={sportsItem?.category_id || ""}
-            disabled={readOnly}
-            required
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <option value="" disabled>Selecione uma categoria...</option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-        </FormField>
-
-        <FormField>
-          <Label htmlFor="price">Preço (R$)</Label>
+          <Label htmlFor="price" required={!sportsItem}>
+            Preço
+          </Label>
           <Input
-            id="price"
             name="price"
+            id="price"
+            placeholder="Insira o preço do artigo esportivo"
+            defaultValue={sportsItem?.price ? sportsItem.price.toFixed(2) : undefined} // <-- A MÁGICA AQUI
+            readOnly={readOnly}
+            disabled={pending}
+            error={error?.errors?.price}
             type="number"
             step="0.01"
-            defaultValue={sportsItem?.price}
-            readOnly={readOnly}
-            required
-            placeholder="Ex: 299.90"
+            min="0"
+            inputMode="decimal"
           />
         </FormField>
 
         <FormField>
-          <Label htmlFor="amount">Quantidade em Estoque</Label>
+          <Label htmlFor="year" required={!sportsItem}>
+            Ano
+          </Label>
           <Input
-            id="amount"
-            name="amount"
-            type="number"
-            defaultValue={sportsItem?.amount}
-            readOnly={readOnly}
-            required
-            placeholder="Ex: 50"
-          />
-        </FormField>
-
-        <FormField>
-          <Label htmlFor="year">Ano de Lançamento</Label>
-          <Input
-            id="year"
             name="year"
-            type="number"
+            id="year"
+            maxLength={4}
+            placeholder="Insira o ano do artigo esportivo"
             defaultValue={sportsItem?.year}
             readOnly={readOnly}
-            required
-            placeholder="Ex: 2024"
+            disabled={pending}
+          />
+        </FormField>
+
+        <FormField>
+          <Label htmlFor="category_id" required={!sportsItem}>
+            Categoria
+          </Label>
+          <Input
+            id="category_id"
+            name="category_id"
+            type="hidden"
+            value={selectedCategory?.id || sportsItem?.category?.id || ""}
+          />
+          <Select
+            value={selectedCategory?.id || sportsItem?.category?.id}
+            onValueChange={(value) => setSelectedCategory(categories.find((category) => category.id == value)!)}
+            disabled={pending || readOnly}
+          >
+            <SelectTrigger id="category_id_select" className="col-span-3">
+              <SelectValue placeholder="Selecione uma categoria" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {error?.errors?.category_id && (
+            <p className="text-destructive text-xs mt-2 col-start-2 col-end-5">
+              {error.errors.category_id}
+            </p>
+          )}
+        </FormField>
+
+        <FormField>
+          <Label htmlFor="amount" required={!sportsItem}>
+            Quantidade
+          </Label>
+          <Input
+            name="amount"
+            id="amount"
+            type="number"
+            min={sportsItem ? "0" : "1"}
+            placeholder="Insira a quantidade do artigo esportivo"
+            defaultValue={sportsItem?.amount}
+            readOnly={readOnly}
+            disabled={pending}
+            error={error?.errors?.amount}
           />
         </FormField>
 

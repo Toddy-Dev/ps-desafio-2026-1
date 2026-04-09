@@ -24,7 +24,7 @@ class ArticleController extends Controller
      */
     public function index(): JsonResponse
     {
-        $articles = $this->articles->all();
+        $articles = $this->articles->with('category')->get();
         return response()->json($articles, Response::HTTP_OK);
     }
 

@@ -34,7 +34,6 @@ export function DialogCreateSportsItem({ children }: DialogCreateSportsItemProps
     const newForm = await filterFormData(form)
 
     const { error } = await JSON.parse(await createSportsItem(newForm))
-
     if (error) {
       setError(error)
       toast({
@@ -45,9 +44,6 @@ export function DialogCreateSportsItem({ children }: DialogCreateSportsItemProps
         title: 'Artigo esportivo criado com sucesso!',
       })
       setOpen(false)
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
     }
   }
 

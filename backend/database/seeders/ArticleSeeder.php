@@ -12,6 +12,9 @@ class ArticleSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+    $categories = \App\Models\Category::all();
+    \App\Models\articles::factory(15)->create([
+        'category_id' => fn() => $categories->random()->id,
+    ]);
     }
 }
