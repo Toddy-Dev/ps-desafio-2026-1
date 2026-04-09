@@ -111,7 +111,7 @@ export default function FormFieldsSportsItem({
             name="price"
             id="price"
             placeholder="Insira o preço do artigo esportivo"
-            defaultValue={sportsItem?.price ? sportsItem.price.toFixed(2) : undefined} // <-- A MÁGICA AQUI
+            defaultValue={sportsItem?.price ? sportsItem.price.toFixed(2) : undefined}
             readOnly={readOnly}
             disabled={pending}
             error={error?.errors?.price}
